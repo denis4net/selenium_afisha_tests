@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.support.ui import Select
 import unittest
-
 
 class BaseTestCase(unittest.TestCase):
     def setUp(self):
@@ -11,6 +11,12 @@ class BaseTestCase(unittest.TestCase):
         self.base_url = "http://afisha.tut.by/"
         self.verificationErrors = []
         self.accept_next_alert = True
+
+    # def launch(self):
+    #     logging.debug('initializing webdriver')
+    #     self.setUp()
+    #     logging.debug('running test...')
+    #     self.run_test()
 
     def is_element_present(self, how, what):
         try:
@@ -55,6 +61,16 @@ class BaseTestCase(unittest.TestCase):
 
     def select_element(self, id, value):
         Select(self.find_element_by_id(id)).select_by_visible_text(value)
+
+    def input(self, id=None, value="", name=None):
+        assert id is not None or name is not None
+        if id is not None:
+            e = self.find_element_by_id(id)
+        elif name is not None:
+            e = self.find_element_by_name(name)
+
+        e.clear()
+        e.send_keys(value)
 
     def assert_title(self, title):
         self.assertEqual(title, self.driver.title)
